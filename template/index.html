@@ -123,5 +123,42 @@
       Powered by
       <a href="https://www.youtube.com/codewithtomi">Code With Tomi</a>
     </footer>
+
+    <script>
+      document
+        .getElementById("generateBlogButton")
+        .addEventListener("click", async () => {
+          const youtubeLink = document.getElementById("youtubeLink").value;
+          const loginIndicator = document.getElementById("loading-circle");
+          const blogContent = document.getElementById("blogContent");
+          if (youtubeLink) {
+            document.getElementById("loading-circle").style.display = "block";
+            loginIndicator.classList.remove("hidden");
+            blogContent.innerHtml = "";
+
+            const endpointUrl = "/generate_blog";
+
+            try {
+              const fetchUrl = await fetch(endpointUrl, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ link: youtubeLink }),
+              });
+
+              const data = await fetchUrl.json();
+
+              blogContent.innerHtml = data.content;
+            } catch (error) {
+              console.error("Something went wrong, Please try again", error);
+            }
+
+            document.getElementById("loading-circle").style.display = "none";
+          } else {
+            alert("Please enter youtube link");
+          }
+        });
+    </script>
   </body>
 </html>
